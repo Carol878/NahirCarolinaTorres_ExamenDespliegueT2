@@ -1,0 +1,34 @@
+name: Despliegue automatico a IONOS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 1. Descargar el codigo
+      uses: actions/checkout@v3
+
+    - name: 2. Preparar Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: 3. Instalar dependencias
+      run: npm ci
+
+    - name: 4. Compilar Angular en Produccion
+      run: npx ng build --configuration production
+
+    - name: 5. Enviar al Servidor VPS
+      uses: easingthemes/ssh-deploy@main
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        REMOTE_HOST: ${{ secrets.SSH_HOST }}
+        REMOTE_USER: ${{ secrets.SSH_USER }}
+        SOURCE: "dist/NahirCarolinaTorres_ExamenDespliegueT2/browser/" 
+        TARGET: "/var/www/html/examen"
