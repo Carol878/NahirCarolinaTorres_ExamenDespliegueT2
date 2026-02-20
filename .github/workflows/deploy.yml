@@ -3,7 +3,7 @@ name: Despliegue automatico a IONOS
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build-and-deploy:
@@ -25,7 +25,7 @@ jobs:
       run: npx ng build --configuration production
 
     - name: 5. Enviar al Servidor VPS
-      uses: easingthemes/ssh-deploy@master
+      uses: easingthemes/ssh-deploy@main
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         REMOTE_HOST: ${{ secrets.SSH_HOST }}
